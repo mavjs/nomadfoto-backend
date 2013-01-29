@@ -1,0 +1,21 @@
+<html metal:use-macro="load: base.pt">
+        <div metal:fill-slot="nav-signed">
+            <div tal:condition="request.user is not None and request.user.title == 'admin'">
+                <ul class="nav">
+                    <li><a href="${request.application_url}/jobs">Jobs Queue</a></li>
+                    <li class="active"><a href="${request.application_url}/upload">Upload Collections</a></li>
+                </ul>
+                <ul class="nav pull-right">
+                    <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-user"></i> ${request.user.title}<b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="${request.application_url}/preferences"><i class="icon-wrench"></i>Preferences</a></li> 
+                            <li><a href="${request.application_url}/logout"><i class="icon-off"></i> Logout</a> </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="container" metal:fill-slot="main-content">
+            <form tal:replace="structure form" />
+        </div>
+</html>

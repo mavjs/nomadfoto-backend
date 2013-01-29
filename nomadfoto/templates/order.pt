@@ -1,0 +1,75 @@
+<html metal:use-macro="load: base.pt">
+    <div class="container" metal:fill-slot="main-content">
+        <div class="span12">
+            <div class="span8 offset2">
+                <fieldset>
+                    <legend>
+                        <h3>Your photo collection</h3>
+                    </legend>
+                </fieldset>
+                <div id="dragzone" class="well">
+                    <ul class="thumbnails">
+                    </ul>
+                </div>
+                <div class="clearfix"></div>
+                <fieldset>
+                    <legend>
+                        <h3>Photo Search Options</h3>
+                    </legend>
+                </fieldset>
+                <form class="form">
+                    <div class="control-group">
+                        <input type="text" id="start-date" placeholder="Job Start Date">
+                        <input type="text" id="end-date" placeholder="Job End Date">
+                        <input type="text" id="pic-tag" placeholder="Search by tag">
+                        <div class="controls">
+                            <button type="submit" class="btn">Search</button>
+                        </div>
+                    </div>
+                </form>
+            <div class="clearfix"></div>
+                <fieldset>
+                    <legend>
+                        <h3>Job Orders</h3>
+                    </legend>
+                </fieldset>
+                <div id="notice" class="alert alert-block">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <h4>Note!</h4>
+                    Click on each picture in the slideshow to add them to job order list here.
+                </div>
+                <div class="orderbaskets">
+                    <div class="span6">
+                        <div id="dropzone" class="well">
+                            <ul class="droppable thumbnails">
+                                <li class="placeholder">Drop your pictures here!</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="span5">
+                        <div id="baskets-container">
+                            <div class="basket">
+                                <div class="basket-form">
+                                    <div class="form">
+                                        <div class="control-group">
+                                            <label class="control-label" for="basket-action">Action</label>
+                                            <div class="controls">
+                                                <select class="basket-action">
+                                                    <option value="print">Print</option>
+                                                    <option value="edit">Edit</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="basket-options-form">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                </div>
+            </div>
+        </div>
+    </div>
+</html>
