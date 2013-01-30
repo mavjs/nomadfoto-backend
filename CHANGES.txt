@@ -1,3 +1,8 @@
+0.2
+---
+
+- storing images logic working, figuring out how to blob storage them.
+
 0.1
 ---
 
