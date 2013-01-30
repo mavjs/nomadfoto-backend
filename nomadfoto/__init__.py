@@ -33,7 +33,7 @@ def main(global_config, **settings):
             session_factory=UnencryptedCookieSessionFactoryConfig('cookiesecret'),
             settings=settings)
 
-    config.add_static_view('resources', 'static', cache_max_age=3600)
+    config.add_static_view('static', 'static', cache_max_age=3600)
     config.scan()
 
     config.set_request_property(get_user, 'user', reify=True)

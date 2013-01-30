@@ -9,10 +9,12 @@ class CheckFileType():
         self.filedict = {}
 
     def unzip(self):
-        self.zipfile_list = zipfile.ZipFile(self.filename).namelist()
-        for item in self.zipfile_list:
-            if os.path.isfile(item):
-                self.filedict[hashlib.md5(item).hexdiget()] = item
+        self.zipfile_list = zipfile.ZipFile(self.filename, 'r')
+        for item in self.zipfile_list.namelist():
+            if not os.path.basename(item):
+                continue
+            source = self.zipfile_list.open(item).read()
+            self.filedict[hashlib.md5(item).hexdigest()] = source
         return self.filedict
     
     def untar(self):

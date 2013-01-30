@@ -16,8 +16,13 @@ class StorageFolder(PersistentMapping):
         item.__parent__ = self
 
 class ImagesFolder(StorageFolder):
-    def __init__(self, image):
-        self.image = image
+    def __init__(self, title, description=u""):
+        super(ImagesFolder, self).__init__(title=title, description=description)
+
+class ImageStore(StorageFolder):
+    def __init__(self, image_file):
+        super(StorageFolder, self).__init__()
+        self.image = image_file
 
 class User(StorageFolder):
     def __init__(self, username, email, password, fullname=u""):
@@ -49,10 +54,10 @@ def appmaker(zodb_root):
                 (Allow, 'admin', 'add_upload'),
                 (Allow, 'admin', 'all_users'),
                 ]
-        app_root['images'] = StorageFolder(
+        app_root['images'] = ImagesFolder(
                 title=u"digi_roll",
                 description=u"Main Storage for Photo Collection",
-                )
+               )
         zodb_root['app_root'] = app_root
         import transaction
         transaction.commit()

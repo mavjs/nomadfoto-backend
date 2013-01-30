@@ -16,9 +16,8 @@
                     Upload the client collections to <b><i>digi_roll</i></b>.
                 </div>
                 <div class="well">
-                    <div tal:repeat="item request.context.values()">
-                        <h1>${item.title}</h1>
-                        <h4>${item.description}</h4>
+                    <div tal:repeat="item request.root['images'].values()">
+                        <p><img src="${item.image}" /></p>
                     </div>
                 </div>
             </div>
