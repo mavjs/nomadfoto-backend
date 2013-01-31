@@ -16,9 +16,6 @@
                     Upload the client collections to <b><i>digi_roll</i></b>.
                 </div>
                 <div class="well">
-                    <div tal:repeat="item request.root['images'].values()">
-                        <p><img src="${item.image}" /></p>
-                    </div>
                 </div>
             </div>
             <div class="span10 offset1">
