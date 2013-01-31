@@ -2,7 +2,7 @@ import os
 import zipfile
 import tarfile
 import hashlib
-import StringIO
+from StringIO import StringIO
 import tempfile
 
 class CheckFileType():
@@ -15,7 +15,7 @@ class CheckFileType():
         for item in self.zipfile_list.namelist():
             if not os.path.basename(item):
                 continue
-            self.filedict[str(hashlib.md5(item).hexdigest())] = repr(self.zipfile_list.read(item))
+            self.filedict[str(hashlib.md5(item).hexdigest())] = StringIO(self.zipfile_list.read(item).decode('base64')).read()
         return self.filedict
     
     def untar(self):
