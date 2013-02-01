@@ -1,5 +1,5 @@
 from persistent.mapping import PersistentMapping
-from pyramid.security import Allow, ALL_PERMISSIONS
+from pyramid.security import Allow, Deny, ALL_PERMISSIONS
 import hashlib
 
 class StorageFolder(PersistentMapping):
@@ -20,9 +20,12 @@ class ImagesFolder(StorageFolder):
         super(ImagesFolder, self).__init__(title=title, description=description)
 
 class ImageStore(StorageFolder):
-    def __init__(self, image_file):
+    def __init__(self, uid, image_name, image_file):
         super(StorageFolder, self).__init__()
+        self.uid = uid
+        self.name = image_name
         self.image = image_file
+
 
 class User(StorageFolder):
     def __init__(self, username, email, password, fullname=u""):
@@ -49,10 +52,19 @@ def appmaker(zodb_root):
                 password=u"nomadfoto",
                 fullname=u"Nomadfoto admin",
                 )
+        app_root['test'] = User(
+                username=u"test",
+                email=u"test",
+                password=u"test",
+                fullname=u"test",
+                )
         app_root.__acl__ = [
                 (Allow, 'admin', ALL_PERMISSIONS),
                 (Allow, 'admin', 'add_upload'),
                 (Allow, 'admin', 'all_users'),
+                (Allow, 'test', 'order'),
+                (Allow, 'test', 'users'),
+                (Deny, 'test', 'add_upload'),
                 ]
         app_root['images'] = ImagesFolder(
                 title=u"digi_roll",
