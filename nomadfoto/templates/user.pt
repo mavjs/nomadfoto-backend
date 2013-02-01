@@ -21,19 +21,6 @@
             </ul>
     </div>
     <div class="container" metal:fill-slot="main-content">
-        <div tal:condition="request.user is not None and request.user.title == 'admin'">
-            <div tal:repeat="item request.root.values()">
-                <div tal:condition="item.title == 'Digi_Roll'">
-                        <h1>${item.title}</h1>
-                        <p>${item.description}</p>
-                        <ul>
-                            <li tal:repeat="image item.image">
-                                <p>${image}</p>
-                            </li>
-                        </ul>
-                </div>
-            </div>
-        </div>
         <div tal:condition="request.user is not None and not request.user.title == 'admin'">
             <div class="span12">
                 <div class="span8 offset2">
@@ -44,6 +31,11 @@
                     </fieldset>
                     <div id="dragzone" class="well">
                         <ul class="thumbnails">
+                            <li class="ui-draggable" tal:repeat="item request.root['images'].values()">
+                                <a class="thumbnail" href="${item.image}">
+                                    <img alt="${item.uid}" src="${item.image}" />
+                                </a>
+                            </li>
                         </ul>
                     </div>
                     <div class="clearfix"></div>
