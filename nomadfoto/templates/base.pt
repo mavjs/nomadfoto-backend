@@ -12,7 +12,7 @@
         <link rel="apple-touch-icon-precomposed" sizes="144x144" href="${request.static_url('nomadfoto:static/apple-touch-icon-144x144-precomposed.png')}">
         <link rel="apple-touch-icon-precomposed" sizes="114x114" href="${request.static_url('nomadfoto:static/apple-touch-icon-114x114-precomposed.png')}">
         <link rel="apple-touch-icon-precomposed" sizes="72x72" href="${request.static_url('nomadfoto:static/apple-touch-icon-72x72-precomposed.png')}">
-        <link rel="apple-touch-icon-precomposed" href="/${request.static_url('nomadfoto:static/apple-touch-icon-57x57-precomposed.png')}">
+        <link rel="apple-touch-icon-precomposed" href="${request.static_url('nomadfoto:static/apple-touch-icon-57x57-precomposed.png')}">
         <link rel="shortcut icon" href="${request.static_url('nomadfoto:static/favicon.ico')}">
         <style>
             body {
