@@ -1,13 +1,16 @@
 (function ($) {
-    /* function to append to a certain node in html
+    // function to append to a certain node in html
     
     function populate_gallery(node, images) {
         $.each(images, function (idx, image) {
+            //node.append('<li style="display: block;"><div><img src="' + image.url + '" /></div></li>');
             node.append('<li><a href="#" class="thumbnail"><img src="' + image.url + '" /></a></li>');
         });
-    } */
+    }
+
+    // function to GetForms.
     function GetForms(jobs) {
-        $.get("${request.static_url('nomadfoto:static/json/')" + $('.basket-action').val() + 'form.html', function (data) {
+        $.get('/resources/json/' + $('.basket-action').val() + 'form.html', function (data) {
             $('.basket-options-form').html(data);
         });
     }
@@ -15,41 +18,37 @@
     function ShowForms() {
         $('.basket-action').change(function (ev) {
             var action = $(ev.target).val();
-            $.get("${request.static_url('nomadfoto:static/json/')" + action + 'form.html', function (data) {
+            $.get('/resources/json/' + action + 'form.html', function (data) {
                 $('.basket-options-form').html(data);
             });
         });
     }
 
-    function ShowMain(count) {
-        $.get("${request.static_url('nomadfoto:static/json/jobsection.html')", function (data) {
+    function ShowMain() {
+        $.get('/resources/json/jobsection.html', function (data) {
             var jobs = data;
-            $('.JobSection').append(jobs);
-            $('.slide').attr('id', 'jobs-' + count);
-            count += 1;
-            $('#joborder').click(function() {
-                ShowMain(count);
-            });
-            GetForms();
-            ShowForms();
+            $('.orderbaskets').append(jobs);
         });
     }
      // on document ready load the functions
      $(document).ready(function() {
-        $('body').jKit();
-        var count = 0;
-        ShowMain(count);
-        $('#prev').click(function (e) {
-                impress().prev();
-                e.preventDefault();
+            GetForms();
+            ShowForms();
+            $('.thumbnails li').draggable({ 
+                helper: "clone",
+                revert: "invalid"
+            });
+            $('.droppable').droppable({
+                activeClass: "ui-state-default",
+                hoverClass: "ui-state-hover",
+                drop: function(event, ui) {
+                    $( this ).find( ".placeholder" ).remove();
+                    $( this ).append('<li>' + ui.draggable.html() + '</li>');
+                }
+            });
         });
-        $('#next').click(function (e) {
-                impress().next();
-                e.preventDefault();
-        });
-        $('#printorder').click(function (e) {
-            $('#notice').removeClass('alert-block').addClass('alert-success');
-            $('#notice').html('<button type="button" class="close" data-dismiss="alert">&times;</button>\n<h4>Success!</h4>\nYour job order has been submitted successfully!\n');
+        $('#joborder').click(function() {
+            ShowMain();
         });
      });
 })(jQuery);
