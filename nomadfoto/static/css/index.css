@@ -1,0 +1,27 @@
+.thumbnail img {
+    height: 50px;
+    width: 80px;
+}
+
+.thumbnails {
+    list-style: none;
+}
+
+.droppable {
+    margin-top: 10px;
+}
+
+.droppable img {
+    height: 50px;
+}
+
+.droppable {
+    list-style: none;
+}
+
+#baskets-container {
+    margin-top: 10px;
+    padding: 5px;
+    border: 2px #e3e3e3 solid;
+    border-radius: 5px;
+}
