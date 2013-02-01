@@ -100,4 +100,7 @@
             </div>
         </div>
     </div>
+    <div metal:fill-slot="footer-scripts">
+        <script src="${request.static_url('nomadfoto:static/js/collection.js')}"></script>
+    </div>
 </html>
