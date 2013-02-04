@@ -5,3 +5,4 @@ nomadfoto/*.pyc
 Makefile
 nomadfoto/templates/images.pt
 nomadfoto/templates.py
+TODO.rst
