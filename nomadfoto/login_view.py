@@ -26,7 +26,7 @@ class Login(FormView):
         self.request.session.flash(
                 u"Welcome, {0}!".format(user.title), "success")
         if user.title == 'admin':
-            return HTTPFound(location=self.request.application_url,
+            return HTTPFound(location=self.request.application_url+'/jobs/',
                     headers=headers)
         else:
             return HTTPFound(location=self.request.resource_url(user),
