@@ -42,9 +42,10 @@ class JobStore(StorageFolder):
 
 #User folder for storing credentials of users
 class User(StorageFolder):
-    def __init__(self, username, email, password, fullname=u""):
+    def __init__(self, username, email, password, dropboxid=u"", fullname=u""):
         super(User, self).__init__(title=username, description=fullname)
         self.email = email
+        self.dropboxid = dropboxid
         self.hashed_password = self.hash(password)
 
     @staticmethod
@@ -98,6 +99,14 @@ def appmaker(zodb_root):
         app_root['jobs'] = GenericFolder(
                 title=u"Jobs Queues",
                 description=u"Folder to store job status queues from clients",
+                )
+        #test user job
+        app_root['jobs']['test-0'] = JobStore(
+                clientid='test',
+                dropboxid='test',
+                jobid='test-0',
+                jobtype='digiroll_x',
+                status='pending',
                 )
 
         zodb_root['app_root'] = app_root

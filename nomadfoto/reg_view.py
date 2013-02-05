@@ -35,6 +35,7 @@ class Registration(FormView):
         user = User(
                 username=username,
                 email=appstruct['email'],
+                dropboxid=dropbox,
                 password=appstruct['email'],
                 fullname=appstruct['fullname'],
                 )
