@@ -25,3 +25,17 @@
     border: 2px #e3e3e3 solid;
     border-radius: 5px;
 }
+.jobsqueue {
+    list-style: none;
+    overflow: hidden;
+}
+.jobs {
+    float: left;
+    margin-right: 5px;
+}
+#red {
+    color: #b94a48;
+}
+#green {
+    color: #468847;
+}

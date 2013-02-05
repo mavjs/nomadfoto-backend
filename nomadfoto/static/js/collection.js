@@ -25,30 +25,23 @@
     }
 
     function ShowMain() {
-        $.get('/resources/json/jobsection.html', function (data) {
-            var jobs = data;
-            $('.orderbaskets').append(jobs);
+        $('.thumbnails li').draggable({ 
+            helper: "clone",
+            revert: "invalid"
+        });
+        $('.droppable').droppable({
+            activeClass: "ui-state-default",
+            hoverClass: "ui-state-hover",
+            drop: function(event, ui) {
+                $( this ).find( ".placeholder" ).remove();
+                $( this ).append('<li>' + ui.draggable.html() + '</li>');
+            }
         });
     }
      // on document ready load the functions
      $(document).ready(function() {
             GetForms();
             ShowForms();
-            $('.thumbnails li').draggable({ 
-                helper: "clone",
-                revert: "invalid"
-            });
-            $('.droppable').droppable({
-                activeClass: "ui-state-default",
-                hoverClass: "ui-state-hover",
-                drop: function(event, ui) {
-                    $( this ).find( ".placeholder" ).remove();
-                    $( this ).append('<li>' + ui.draggable.html() + '</li>');
-                }
-            });
-        });
-        $('#joborder').click(function() {
             ShowMain();
         });
-     });
 })(jQuery);
