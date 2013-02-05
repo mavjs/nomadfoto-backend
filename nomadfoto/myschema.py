@@ -5,11 +5,13 @@ from deform import FileData
 from deform.widget import FileUploadWidget, SelectWidget
 
 class LoginSchema(Schema):
-    username = SchemaNode(String(), title=u"username")
-    password = SchemaNode(String(), title=u"password", widget=PasswordWidget())
+    username = SchemaNode(String(), title=u"Username")
+    password = SchemaNode(String(), title=u"Password", widget=PasswordWidget())
     
 class RegistrationSchema(LoginSchema):
+    confirm = SchemaNode(String(), title=u"Confirm Password", widget=PasswordWidget())
     fullname = SchemaNode(String(), title=u"Full Name")
+    dropboxid = SchemaNode(String(), title=u"Dropbox Username")
     email = SchemaNode(String(), title=u"Email")
 
 class Store(dict):
@@ -24,5 +26,6 @@ def deferred_users_validator(node, kw):
     return SelectWidget(values=usernames)
 
 class UploadSchema(Schema):
-    username = SchemaNode(String(), title=u"Username")
+    username = SchemaNode(String(), title=u"Username:")
+    jobid = SchemaNode(String(), title=u"Job ID: ")
     items = SchemaNode(FileData(), widget=FileUploadWidget(store))

@@ -6,7 +6,7 @@ from pyramid.httpexceptions import HTTPFound
 #get_user from __init__.py
 from . import get_user
 #User storage
-from .models import User
+from .models import User, JobStore
 #Schemas
 from .myschema import RegistrationSchema
 
@@ -18,10 +18,18 @@ class Registration(FormView):
 
     def register_success(self, appstruct):
         username = appstruct.pop('username')
+        password = appstruct['password']
+        confirm = appstruct['confirm']
+        dropbox = appstruct['dropboxid']
         user = get_user(self.request, username)
         if user is not None:
             self.request.session.flash(
                     u"That username is already taken.", "error")
+            return None
+        elif not (password == confirm):
+            self.request.session.flash(
+                    u"The passwords you have entered are not same.", "error"
+                    )
             return None
 
         user = User(
@@ -36,6 +44,20 @@ class Registration(FormView):
                 (Deny, user.title, 'add_upload'),
                 ]
         self.request.root[username] = user
+
+        job_id = username + '-' + str(len(self.request.root['jobs'].values()))
+        job = JobStore(
+                clientid=username,
+                dropboxid=dropbox,
+                jobid=job_id,
+                jobtype='digiroll_x',
+                status='pending',
+                )
+        job.__acl__ = [
+                (Allow, user.title, 'view'),
+                (Allow, 'admin', 'view'),
+                ]
+        self.request.root['jobs'][job_id] = job
         headers = remember(self.request, user.__name__)
         self.request.session.flash(
                 u"Welcome to your collections, {0}!".format(user.title),
