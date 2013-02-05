@@ -27,6 +27,7 @@ class Upload(FormView):
     
     def upload_success(self, appstruct):
         username = appstruct['username']
+        jobid = appstruct['jobid']
         user = get_user(self.request, username)
         if user is None:
             self.request.session.flash(
@@ -45,7 +46,8 @@ class Upload(FormView):
                 unzip_image = zip_list.read(item).encode('base64')
                 finished_image = "data:"+mimetypes.guess_type(item)[0]+";base64,"+unzip_image
                 source = ImageStore(
-                        uid=file_uid,
+                        uid=user.title,
+                        jobid=jobid,
                         image_name=split_name,
                         image_file=finished_image,
                         )
@@ -54,5 +56,6 @@ class Upload(FormView):
                         (Allow, user.title, 'share'),
                         ]
                 self.request.root['images'][file_uid] = source
+                self.request.root['jobs'][jobid].status = 'completed'
         self.request.session.flash(u"Your folder was added.", "success")
         return HTTPFound(location=self.request.application_url)
