@@ -22,6 +22,8 @@
         </style>
         <style metal:define-slot="inline-style">
         </style>
+        <link metal:define-slot="inline-css">
+        </link>
         <link rel="stylesheet" href="${request.static_url('nomadfoto:static/css/bootstrap-responsive.min.css')}">
         <link rel="stylesheet" href="${request.static_url('nomadfoto:static/css/font-awesome.min.css')}">
         <link rel="stylesheet" href="${request.static_url('nomadfoto:static/css/font-awesome.css')}">

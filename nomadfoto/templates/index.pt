@@ -7,16 +7,43 @@
             overflow: hidden;
         }
     </style>
+    <div metal:fill-slot="nav-signed">
+        <!-- show menus on signed start -->
+        <div tal:condition="request.user is not None and request.user.title == 'admin'">
+            <ul class="nav pull-right">
+                <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-user"></i> ${request.user.title}<b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="${request.application_url}/preferences"><i class="icon-wrench"></i>Preferences</a></li> 
+                        <li><a href="${request.application_url}/logout"><i class="icon-off"></i> Logout</a> </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        <!-- show menus on signed in end -->
+    </div>
     <div class="container" metal:fill-slot="main-content">
-        <div class="span8 offset2">
+        <div class="span12">
             <div tal:condition="request.user is not None and request.user.title == 'admin'">
-                <div class="alert alert-info">
-                    <button type="button" class="close" data-dismiss="alert">&times;</button>
-                    <h4>Note!</h4>
-                    Upload the client collections to <b><i>digi_roll</i></b>.
-                </div>
+                <h3>Welcome, ${request.user.title}, this is your job queues.</h3>
+                <h5>Pending jobs are in <span id="red">red</span> and completed jobs are in <span id="green">green</span>.</h5>
                 <div class="well">
-                    <ul>
+                    <ul class="jobsqueue">
+                        <li class="jobs" tal:repeat="item request.root['jobs'].values()">
+                            <div class="alert alert-error" tal:condition="item.status == 'pending'">
+                                <p><a href="${request.resource_url(context, 'upload')}" class="btn btn-info">Upload digi_roll</a></p>
+                                <p><b><i>Client username:</i></b> ${item.uid}</p>
+                                <p><b><i>Client dropboxid:</i></b>  ${item.dropboxuid}</p>
+                                <p><b><i>Requested Jobid:</i></b>  ${item.jobid}</p>
+                                <p><b><i>Requested Jobtype:</i></b>  ${item.jobtype}</p>
+                                <p><b><i>Job Status:</i></b>  ${item.status}</p>
+                            </div>
+                            <div class="alert alert-success" tal:condition="item.status == 'completed'">
+                                <p><b><i>Client username:</i></b> ${item.uid}</p>
+                                <p><b><i>Client dropboxid:</i></b>  ${item.dropboxuid}</p>
+                                <p><b><i>Requested Jobtype:</i></b>  ${item.jobtype}</p>
+                                <p><b><i>Job Status:</i></b>  ${item.status}</p>
+                            </div>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -31,22 +58,5 @@
                  </div>
              </div>
         </div>
-    </div>
-    <div metal:fill-slot="nav-signed">
-        <!-- show menus on signed start -->
-        <div tal:condition="request.user is not None and request.user.title == 'admin'">
-            <ul class="nav">
-                <li><a href="${request.application_url}/upload">Upload to Digi_Roll</a></li>
-            </ul>
-            <ul class="nav pull-right">
-                <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-user"></i> ${request.user.title}<b class="caret"></b></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="${request.application_url}/preferences"><i class="icon-wrench"></i>Preferences</a></li> 
-                        <li><a href="${request.application_url}/logout"><i class="icon-off"></i> Logout</a> </li>
-                    </ul>
-                </li>
-            </ul>
-        </div>
-        <!-- show menus on signed in end -->
     </div>
 </html>

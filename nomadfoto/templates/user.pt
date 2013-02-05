@@ -3,22 +3,17 @@
         <div tal:condition="request.user is not None and not request.user.title == 'admin'">
             <ul class="nav">
                 <li class="active"><a href="${request.resource_url(context)}">Collections</a></li>
-                <li><a href="${request.resource_url(context, 'order')}">Ordered Jobs</a></li>
+                <li><a href="${request.resource_url(context, 'jobs')}">Ordered Jobs</a></li>
             </ul>
         </div>
-        <div tal:condition="request.user is not None and request.user.title == 'admin'">
-            <ul class="nav">
-                <li><a href="${request.application_url}/upload">Upload Collections</a></li>
-            </ul>
-        </div>
-            <ul class="nav pull-right">
-                <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-user"></i> ${request.user.title}<b class="caret"></b></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="${request.application_url}/preferences"><i class="icon-wrench"></i>Preferences</a></li> 
-                        <li><a href="${request.application_url}/logout"><i class="icon-off"></i> Logout</a> </li>
-                    </ul>
-                </li>
-            </ul>
+        <ul class="nav pull-right">
+            <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-user"></i> ${request.user.title}<b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                    <li><a href="${request.application_url}/preferences"><i class="icon-wrench"></i>Preferences</a></li> 
+                    <li><a href="${request.application_url}/logout"><i class="icon-off"></i> Logout</a> </li>
+                </ul>
+            </li>
+        </ul>
     </div>
     <div class="container" metal:fill-slot="main-content">
         <div tal:condition="request.user is not None and not request.user.title == 'admin'">
@@ -32,8 +27,8 @@
                     <div id="dragzone" class="well">
                         <ul class="thumbnails">
                             <li class="ui-draggable" tal:repeat="item request.root['images'].values()">
-                                <a class="thumbnail" href="${item.image}">
-                                    <img alt="${item.uid}" src="${item.image}" />
+                                <a class="thumbnail" href="${item.image}" tal:condition="item.uid == request.user.title">
+                                    <img src="${item.image}" />
                                 </a>
                             </li>
                         </ul>

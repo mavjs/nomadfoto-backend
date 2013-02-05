@@ -1,0 +1,40 @@
+<html metal:use-macro="load: base.pt">
+    <div metal:fill-slot="nav-signed">
+        <div tal:condition="request.user is not None and not request.user.title == 'admin'">
+            <ul class="nav">
+                <li><a href="${request.resource_url(context)}">Collections</a></li>
+                <li class="active"><a href="${request.resource_url(context, 'jobs')}">Ordered Jobs</a></li>
+            </ul>
+        </div>
+        <ul class="nav pull-right">
+            <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-user"></i> ${request.user.title}<b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                    <li><a href="${request.application_url}/preferences"><i class="icon-wrench"></i>Preferences</a></li> 
+                    <li><a href="${request.application_url}/logout"><i class="icon-off"></i> Logout</a> </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+    <div class="container" metal:fill-slot="main-content">
+        <div class="span12">
+                <h3>Welcome, ${request.user.title}, this is the jobs queues.</h3>
+                <h5>Pending jobs from the admin are in <span id="red">red</span> and completed jobs are in <span id="green">green</span>.</h5>
+            <div class="well">
+                <div tal:condition="request.user is not None and not request.user.title == 'admin'">
+                    <ul class="jobsqueue">
+                        <li class="jobs" tal:repeat="item request.root['jobs'].values()">
+                            <div class="alert alert-error" tal:condition="item.uid == request.user.title and item.status == 'pending'">
+                                <p><b><i>Requested Jobtype:</i></b>  ${item.jobtype}</p>
+                                <p><b><i>Job Status:</i></b>  ${item.status}</p>
+                            </div>
+                            <div class="alert alert-success" tal:condition="item.uid == request.user.title and item.status == 'completed'">
+                                <p><b><i>Requested Jobtype:</i></b>  ${item.jobtype}</p>
+                                <p><b><i>Job Status:</i></b>  ${item.status}</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</html>
