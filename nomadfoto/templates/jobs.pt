@@ -24,7 +24,7 @@
                     <ul class="jobsqueue">
                         <li class="jobs" tal:repeat="item request.root['jobs'].values()">
                             <div class="alert alert-error" tal:condition="item.uid == request.user.title and item.status == 'pending'">
-                                <p><b><i>Requested Jobtype:</i></b>  ${item.jobtype}</p>
+                                <p tal:condition="item.jobtype == 'digiroll_x'"><b><i>Requested Jobtype:</i></b> ${item.jobtype} - 'Download from Dropbox'</p>
                                 <p><b><i>Job Status:</i></b>  ${item.status}</p>
                             </div>
                             <div class="alert alert-success" tal:condition="item.uid == request.user.title and item.status == 'completed'">
