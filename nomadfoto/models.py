@@ -21,7 +21,7 @@ class GenericFolder(StorageFolder):
     def __init__(self, title, description=u""):
         super(GenericFolder, self).__init__(title=title, description=description)
 
-#Image folder for each image storing X: use ZODB.Blob()
+#Image folder for each image storing XXX: use ZODB.Blob()
 class ImageStore(StorageFolder):
     def __init__(self, uid, jobid, image_name, image_file):
         super(ImageStore, self).__init__(self)
@@ -50,7 +50,7 @@ class User(StorageFolder):
 
     @staticmethod
     def hash(password):
-        return hashlib.sha512(password.encode('utf-8')).hexdigest() #X: change algo on prod/final demo
+        return hashlib.sha512(password.encode('utf-8')).hexdigest() #XXX: change algo on prod/final demo
 
     def validate_password(self, password):
         return self.hash(password) == self.hashed_password
@@ -63,7 +63,7 @@ def appmaker(zodb_root):
                 description=u"Main Storage for Photomanagement",
                 )
         
-        #admin account X:to change credentials on prod
+        #admin account XXX:to change credentials on prod
         app_root['admin'] = User(
                 username=u"admin",
                 email=u"mavjs@mavjs.org",
@@ -71,7 +71,7 @@ def appmaker(zodb_root):
                 fullname=u"Nomadfoto Admin",
                 )
 
-        #test user account X: to remove on prod
+        #test user account XXX: to remove on prod
         app_root['test'] = User(
                 username=u"test",
                 email=u"test",
@@ -79,7 +79,7 @@ def appmaker(zodb_root):
                 fullname=u"test",
                 )
 
-        #give permissions X: to check acl on prod/demo
+        #give permissions XXX: to check acl on prod/demo
         app_root.__acl__ = [
                 (Allow, 'admin', ALL_PERMISSIONS),
                 (Allow, 'admin', 'add_upload'),
@@ -89,13 +89,13 @@ def appmaker(zodb_root):
                 (Deny, 'test', 'add_upload'),
                 ]
 
-        #unified storage for all images X: change to each user image folder?
+        #unified storage for all images XXX: change to each user image folder?
         app_root['images'] = GenericFolder(
                 title=u"digi_roll",
                 description=u"Main Storage for Photo Collection",
                )
 
-        #unified storage for job queues X: change to each user job folder?
+        #unified storage for job queues XXX: change to each user job folder?
         app_root['jobs'] = GenericFolder(
                 title=u"Jobs Queues",
                 description=u"Folder to store job status queues from clients",
@@ -105,7 +105,7 @@ def appmaker(zodb_root):
                 clientid='test',
                 dropboxid='test',
                 jobid='test-0',
-                jobtype='digiroll_x',
+                jobtype='digiroll_all',
                 status='pending',
                 )
 
