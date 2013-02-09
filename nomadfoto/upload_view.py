@@ -3,7 +3,7 @@ from pyramid.view import view_config
 from pyramid_deform import FormView
 from pyramid.httpexceptions import HTTPFound
 #from .uploadcheck import CheckFileType
-from cStringIO import StringIO
+from StringIO import StringIO
 from .models import ImageStore
 from .myschema import UploadSchema
 from . import get_user
@@ -11,6 +11,7 @@ import mimetypes
 import os
 import zipfile
 import hashlib
+import Image
 
 choices = [
                 ('', '-- Select --')
@@ -43,8 +44,12 @@ class Upload(FormView):
                     continue
                 split_name = item.split('/')[-1] 
                 file_uid = str(hashlib.md5(split_name).hexdigest())
-                unzip_image = zip_list.read(item).encode('base64')
-                finished_image = "data:"+mimetypes.guess_type(item)[0]+";base64,"+unzip_image
+                unzip_image = zip_list.read(item)
+                im = Image.open(StringIO(unzip_image))
+                im_string = StringIO()
+                im2 = im.resize((80, 50), Image.ANTIALIAS)
+                im2.save(im_string, "PNG")
+                finished_image = "data:"+mimetypes.guess_type(item)[0]+";base64,"+im2.fp.read().encode('base64')
                 source = ImageStore(
                         uid=user.title,
                         jobid=jobid,
