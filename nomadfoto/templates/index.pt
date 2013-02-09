@@ -30,12 +30,14 @@
                     <ul class="jobsqueue">
                         <li class="jobs" tal:repeat="item request.root['jobs'].values()">
                             <div class="alert alert-error" tal:condition="item.status == 'pending'">
-                                <p><a href="${request.resource_url(context, 'upload')}" class="btn btn-info">Upload digi_roll</a></p>
-                                <p><b><i>Client username:</i></b> ${item.uid}</p>
-                                <p><b><i>Client dropboxid:</i></b>  ${item.dropboxuid}</p>
-                                <p><b><i>Requested Jobid:</i></b>  ${item.jobid}</p>
-                                <p><b><i>Requested Jobtype:</i></b>  ${item.jobtype}</p>
-                                <p><b><i>Job Status:</i></b>  ${item.status}</p>
+                                <div id="${item.jobid}">
+                                    <p><a id="upload" data-jobid="${item.jobid}" class="btn btn-info">Upload</a></p>
+                                    <p><b><i>Client username:</i></b>  <span id="uid">${item.uid}</span></p>
+                                    <p><b><i>Requested Jobid:</i></b>  <span id="juid">${item.jobid}</span></p>
+                                    <p><b><i>Client dropboxid:</i></b>  ${item.dropboxuid}</p>
+                                    <p><b><i>Requested Jobtype:</i></b>  ${item.jobtype}</p>
+                                    <p><b><i>Job Status:</i></b>  ${item.status}</p>
+                                </div>
                             </div>
                             <div class="alert alert-success" tal:condition="item.status == 'completed'">
                                 <p><b><i>Client username:</i></b> ${item.uid}</p>
@@ -46,6 +48,35 @@
                         </li>
                     </ul>
                 </div>
+            </div>
+            <div tal:condition="not request.user is None and request.user.title == 'admin'" class="uploadform">
+                <form class="form-horizontal">
+                    <fieldset>
+                        <div class="control-group">
+                            <label class="control-label"><b>Client username</b></label>
+                            <div class="controls">
+                                <input id="username" type="text" name="username" value="" placeholder="" disabled>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label"><b>Requested Jobid</b></label>
+                            <div class="controls">
+                                <input id="jobid" type="text" name="jobid" value="" placeholder="" disabled>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label"><b>File</b></label>
+                            <div class="controls">
+                                <input type="file" name="upload" placeholder="Select the file to upload">
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <div class="controls">
+                                <button name="upload" type="submit" class="btn btn-info">Upload</button>
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
             </div>
             <div class="span10 offset1">
                 <div class="well" tal:condition="request.user is None">
@@ -58,5 +89,29 @@
                  </div>
              </div>
         </div>
+    </div>
+    <div metal:fill-slot="footer-scripts">
+        <script>
+            function ShowUp() {
+                $('.uploadform').hide();
+            }
+            function Upload() {
+                $('#upload').click(
+                    function(e) {
+                        var info = '#'+$(this).data('jobid');
+                        var uid = $(info).find('span#uid').text();
+                        var jid = $(info).find('span#juid').text();
+                        $('.uploadform').find('input#username').attr('placeholder', uid);
+                        $('.uploadform').find('input#jobid').attr('placeholder', jid);
+                        $('.uploadform').find('input#username').attr('value', uid);
+                        $('.uploadform').find('input#jobid').attr('value', jid);
+                        $('.uploadform').show();
+                    });
+            }
+            $(document).ready(function() {
+                ShowUp();
+                Upload();
+            });
+        </script>
     </div>
 </html>
