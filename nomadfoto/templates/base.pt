@@ -19,6 +19,19 @@
                 padding-top: 50px;
                 padding-bottom: 40px;
             }
+        .overlay {
+                display: none;
+                position: absolute;
+                top: 0%;
+                left: 0%;
+                width: 100%;
+                height: 100%;
+                background-color: black;
+                z-index:1001;
+                -moz-opacity: 0.8;
+                opacity:.80;
+                filter: alpha(opacity=80);
+            }
         </style>
         <style metal:define-slot="inline-style">
         </style>
