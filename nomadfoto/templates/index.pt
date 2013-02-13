@@ -6,6 +6,21 @@
             float: left;
             overflow: hidden;
         }
+        .uploadform {
+            display: none;
+            position: absolute;
+            top: 25%;
+            left: 25%;
+            right: 25%;
+            padding: 50px;
+            border-radius: 15px;
+            background-color: white;
+            z-index:1002;
+            overflow: auto;
+        }
+        #btnpending, #btncompleted {
+            margin: 5px;
+        }
     </style>
     <div metal:fill-slot="nav-signed">
         <!-- show menus on signed start -->
@@ -23,61 +38,7 @@
     </div>
     <div class="container" metal:fill-slot="main-content">
         <div class="span12">
-            <div tal:condition="request.user is not None and request.user.title == 'admin'">
-                <h3>Welcome, ${request.user.title}, this is your job queues.</h3>
-                <h5>Pending jobs are in <span id="red">red</span> and completed jobs are in <span id="green">green</span>.</h5>
-                <div class="well">
-                    <ul class="jobsqueue">
-                        <li class="jobs" tal:repeat="item request.root['jobs'].values()">
-                            <div class="alert alert-error" tal:condition="item.status == 'pending'">
-                                <div id="${item.jobid}">
-                                    <p><a id="upload" data-jobid="${item.jobid}" class="btn btn-info">Upload</a></p>
-                                    <p><b><i>Client username:</i></b>  <span id="uid">${item.uid}</span></p>
-                                    <p><b><i>Requested Jobid:</i></b>  <span id="juid">${item.jobid}</span></p>
-                                    <p><b><i>Client dropboxid:</i></b>  ${item.dropboxuid}</p>
-                                    <p><b><i>Requested Jobtype:</i></b>  ${item.jobtype}</p>
-                                    <p><b><i>Job Status:</i></b>  ${item.status}</p>
-                                </div>
-                            </div>
-                            <div class="alert alert-success" tal:condition="item.status == 'completed'">
-                                <p><b><i>Client username:</i></b> ${item.uid}</p>
-                                <p><b><i>Client dropboxid:</i></b>  ${item.dropboxuid}</p>
-                                <p><b><i>Requested Jobtype:</i></b>  ${item.jobtype}</p>
-                                <p><b><i>Job Status:</i></b>  ${item.status}</p>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <div tal:condition="not request.user is None and request.user.title == 'admin'" class="uploadform">
-                <form class="form-horizontal">
-                    <fieldset>
-                        <div class="control-group">
-                            <label class="control-label"><b>Client username</b></label>
-                            <div class="controls">
-                                <input id="username" type="text" name="username" value="" placeholder="" disabled>
-                            </div>
-                        </div>
-                        <div class="control-group">
-                            <label class="control-label"><b>Requested Jobid</b></label>
-                            <div class="controls">
-                                <input id="jobid" type="text" name="jobid" value="" placeholder="" disabled>
-                            </div>
-                        </div>
-                        <div class="control-group">
-                            <label class="control-label"><b>File</b></label>
-                            <div class="controls">
-                                <input type="file" name="upload" placeholder="Select the file to upload">
-                            </div>
-                        </div>
-                        <div class="control-group">
-                            <div class="controls">
-                                <button name="upload" type="submit" class="btn btn-info">Upload</button>
-                            </div>
-                        </div>
-                    </fieldset>
-                </form>
-            </div>
+            <!-- for no auth clients -->
             <div class="span10 offset1">
                 <div class="well" tal:condition="request.user is None">
                      <h1>Welcome to Nomadfoto!</h1>
@@ -86,18 +47,83 @@
                         <a class="btn btn-primary" href="${request.application_url}/register">Register</a>
                         <a class="btn btn-primary pull-right" href="${request.application_url}/login">Log In</a>
                      <!-- show menus on not signed in end -->
-                 </div>
-             </div>
+                </div>
+            </div>
+            <!-- for no auth clients -->
+            <div tal:condition="request.user is not None and request.user.title == 'admin'">
+                <h3>Welcome, ${request.user.title}, this is your job queues.</h3>
+                <h5>Pending jobs are in <span id="red">red</span> and completed jobs are in <span id="green">green</span>.</h5>
+                <div class="well">
+                    <div class="clearfix">
+                        <a class="btn btn-danger pull-right" id="btnpending">Show Pending</a>
+                        <a class="btn btn-success pull-right" id="btncompleted">Show Completed</a>
+                    </div>
+                    <hr />
+                    <div id="pending">
+                        <ul class="jobsqueue">
+                            <li class="jobs" tal:repeat="item request.root['jobs'].values()">
+                                <div class="alert alert-error" tal:condition="item.status == 'pending'">
+                                    <div id="${item.jobid}">
+                                        <p><a id="upload" data-jobid="${item.jobid}" class="btn btn-info">Upload</a><a id="mark" data-jobid="${item.jobid}" class="btn btn-info pull-right">Mark Complete</a></p>
+                                        <p><b><i>Client username:</i></b>  <span id="uid">${item.uid}</span></p>
+                                        <p><b><i>Requested Jobid:</i></b>  <span id="juid">${item.jobid}</span></p>
+                                        <p><b><i>Client dropboxid:</i></b>  ${item.dropboxuid}</p>
+                                        <p><b><i>Requested Jobtype:</i></b>  ${item.jobtype}</p>
+                                        <p><b><i>Job Status:</i></b>  ${item.status}</p>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div id="completed">
+                        <ul class="jobsqueue">
+                            <li class="jobs" tal:repeat="item request.root['jobs'].values()">
+                                <div class="alert alert-success" tal:condition="item.status == 'completed'">
+                                    <p><b><i>Client username:</i></b> ${item.uid}</p>
+                                    <p><b><i>Client dropboxid:</i></b>  ${item.dropboxuid}</p>
+                                    <p><b><i>Requested Jobtype:</i></b>  ${item.jobtype}</p>
+                                    <p><b><i>Job Status:</i></b>  ${item.status}</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div tal:condition="not request.user is None and request.user.title == 'admin'" class="uploadform">
+                <form class="form-horizontal"  action="${request.application_url}/upload" method="POST" accept-charset="utf-8" enctype="multipart/form-data">
+                    <fieldset>
+                        <div class="control-group">
+                            <label class="control-label" for="username"><b>Client username</b></label>
+                            <div class="controls">
+                                <input id="username" type="text" name="username" value="" placeholder="" readonly="readonly">
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label" for="jobid"><b>Requested Jobid</b></label>
+                            <div class="controls">
+                                <input id="jobid" type="text" name="jobid" value="" placeholder="" readonly="readonly">
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label" for="upload"><b>File</b></label>
+                            <div class="controls">
+                                <input id="upload" type="file" name="upload" placeholder="Select the file to upload">
+                            </div>
+                        </div>
+                        <hr />
+                        <a id="cancel" href="" class="btn btn-warning">Cancel</a>
+                        <button name="submit" type="submit" value="submit" class="btn btn-primary pull-right">Upload</button>
+                    </fieldset>
+                </form>
+            </div>
         </div>
     </div>
     <div metal:fill-slot="footer-scripts">
         <script>
-            function ShowUp() {
-                $('.uploadform').hide();
-            }
             function Upload() {
                 $('#upload').click(
                     function(e) {
+                        e.preventDefault();
                         var info = '#'+$(this).data('jobid');
                         var uid = $(info).find('span#uid').text();
                         var jid = $(info).find('span#juid').text();
@@ -105,12 +131,50 @@
                         $('.uploadform').find('input#jobid').attr('placeholder', jid);
                         $('.uploadform').find('input#username').attr('value', uid);
                         $('.uploadform').find('input#jobid').attr('value', jid);
-                        $('.uploadform').show();
+                        $('.uploadform').css('display', 'block');
+                        $('.overlay').css('display', 'block');
+                        $('.navbar').css('z-index', 1000);
                     });
+                $('#cancel').click(
+                    function() {
+                        $('.uploadform').css('display', 'none');
+                        $('.overlay').css('display', 'none');
+                    });
+                $('.overlay').live('click', function() {
+                        $('.uploadform').css('display', 'none');
+                        $('.overlay').css('display', 'none');
+                    });
+                }
+            function Mark(jobid) {
+                var form = document.createElement("form");
+                form.setAttribute("method", "POST");
+                form.setAttribute("action", "mark");
+                form.setAttribute("type", "hidden");
+                var inputfield = document.createElement("input");
+                inputfield.setAttribute("type", "hidden");
+                inputfield.setAttribute("name", "jobid");
+                inputfield.setAttribute("value", jobid);
+                form.appendChild(inputfield);
+                document.body.appendChild(form);
+                form.submit();
             }
             $(document).ready(function() {
-                ShowUp();
                 Upload();
+                $('#completed').hide();
+                $('#btncompleted').click(function(){
+                        $('#completed').show();
+                        $('#pending').hide();
+                    });
+                $('#btnpending').click(function() {
+                    $('#completed').hide();
+                    $('#pending').show();
+                });
+                $('#mark').click(function(e) {
+                    e.preventDefault();
+                    var info = '#'+$(this).data('jobid');
+                    var jid = $(info).find('span#juid').text();
+                    Mark(jid);
+                });
             });
         </script>
     </div>
