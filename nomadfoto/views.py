@@ -1,5 +1,4 @@
 from pyramid.view import view_config
-from .models import User
 from pyramid.security import authenticated_userid
 from pyramid.httpexceptions import HTTPFound
 
@@ -11,11 +10,3 @@ def index(request):
         return {}
     else:
         return HTTPFound(location=request.resource_url(request.user))
-
-@view_config(
-        context=User,
-        permission="users",
-        renderer="templates/user.pt")
-def user_view(context, request):
-    return {}
-
