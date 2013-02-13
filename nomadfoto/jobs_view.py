@@ -8,3 +8,10 @@ from .models import User
         renderer="templates/jobs.pt")
 def jobs_view(context, request):
     return {}
+
+@view_config(
+        context=User,
+        permission="users",
+        renderer="templates/user.pt")
+def user_view(context, request):
+    return {}
