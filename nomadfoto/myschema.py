@@ -8,9 +8,11 @@ class LoginSchema(Schema):
     username = SchemaNode(String(), title=u"Username")
     password = SchemaNode(String(), title=u"Password", widget=PasswordWidget())
     
-class RegistrationSchema(LoginSchema):
-    confirm = SchemaNode(String(), title=u"Confirm Password", widget=PasswordWidget())
+class RegistrationSchema(Schema):
     fullname = SchemaNode(String(), title=u"Full Name")
+    username = SchemaNode(String(), title=u"Username")
+    password = SchemaNode(String(), title=u"Password", widget=PasswordWidget())
+    confirm = SchemaNode(String(), title=u"Confirm Password", widget=PasswordWidget())
     dropboxid = SchemaNode(String(), title=u"Dropbox Username")
     email = SchemaNode(String(), title=u"Email")
 
