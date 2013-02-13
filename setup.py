@@ -17,7 +17,7 @@ requires = [
     'deform',
     'deform_bootstrap',
     'pyramid_deform',
-    'Pillow',
+    'PIL',
     ]
 
 setup(name='nomadfoto',
