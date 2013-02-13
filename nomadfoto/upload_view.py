@@ -1,44 +1,34 @@
 from pyramid.security import Allow
 from pyramid.view import view_config
-from pyramid_deform import FormView
 from pyramid.httpexceptions import HTTPFound
-#from .uploadcheck import CheckFileType
 from StringIO import StringIO
 from .models import ImageStore
-from .myschema import UploadSchema
-from . import get_user
-import mimetypes
 import os
 import zipfile
 import hashlib
 import Image
 
-choices = [
-                ('', '-- Select --')
-                ]
 @view_config(
         name="upload",
         permission="add_upload",
-        renderer="templates/upload.pt")
-class Upload(FormView):
-    schema = UploadSchema()
-    buttons = ('upload',)
-    title = u"Upload"
-
-    
-    def upload_success(self, appstruct):
-        username = appstruct['username']
-        jobid = appstruct['jobid']
-        user = get_user(self.request, username)
-        if user is None:
-            self.request.session.flash(
-                    u"No such users exist", "error")
-            return None
-        images = appstruct['items']
-        image_files = images['fp'].read()
-        image_type = images['mimetype']
-        if image_type == 'application/zip':
-            zip_list = zipfile.ZipFile(StringIO(image_files), 'r')
+        request_method="POST"
+        )
+def upload_view(request):
+    user = request.POST['username']
+    jobid = request.POST['jobid']
+    uploadfile = request.POST['upload']
+    return_url = request['HTTP_ORIGIN']
+    import pdb; pdb.set_trace()
+    if not uploadfile:
+        request.session.flash(u"Please select a file to upload", "error")
+        return HTTPFound(location=return_url)
+    filetype = uploadfile.type
+    filezip = StringIO(uploadfile.file.read())
+    if not filetype == 'application/zip':
+        request.session.flash(u"Please upload a zip file.", "error")
+        return HTTPFound(location=return_url)
+    elif filetype == 'application/zip':
+            zip_list = zipfile.ZipFile(filezip, 'r')
             for item in zip_list.namelist():
                 if not os.path.basename(item):
                     continue
@@ -49,18 +39,29 @@ class Upload(FormView):
                 im_string = StringIO()
                 im2 = im.resize((80, 50), Image.ANTIALIAS)
                 im2.save(im_string, "PNG")
-                finished_image = "data:"+mimetypes.guess_type(item)[0]+";base64,"+im2.fp.read().encode('base64')
+                finished_image = "data:image/png;base64,"+im_string.getvalue().encode('base64')
                 source = ImageStore(
-                        uid=user.title,
+                        uid=user,
                         jobid=jobid,
                         image_name=split_name,
                         image_file=finished_image,
                         )
                 source.__acl__ = [
-                        (Allow, user.title, 'view'),
-                        (Allow, user.title, 'share'),
+                        (Allow, user, 'view'),
+                        (Allow, user, 'share'),
                         ]
-                self.request.root['images'][file_uid] = source
-                self.request.root['jobs'][jobid].status = 'completed'
-        self.request.session.flash(u"Your folder was added.", "success")
-        return HTTPFound(location=self.request.application_url)
+                request.root['images'][file_uid] = source
+                request.root['jobs'][jobid].status = 'completed'
+            request.session.flash(u"Upload job done. The job has been marked complete.", "success")
+            return HTTPFound(location=request.application_url)
+
+@view_config(
+        name="mark",
+        permission="add_upload",
+        request_method="POST"
+        )
+def mark_job(request):
+    jobid = request.POST['jobid']
+    request.root['jobs'][jobid].status = 'completed'
+    request.session.flash(u"The job has been marked complete.", "success")
+    return HTTPFound(location=request.application_url)
