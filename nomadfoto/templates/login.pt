@@ -1,5 +1,5 @@
 <html metal:use-macro="load: base.pt">
-    <div class="container" metal:fill-slot="main-content">
+    <div metal:fill-slot="main-content">
         <form tal:replace="structure form" />
     </div>
 </html>
