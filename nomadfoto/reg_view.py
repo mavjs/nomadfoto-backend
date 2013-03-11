@@ -38,6 +38,7 @@ class Registration(FormView):
                 dropboxid=dropbox,
                 password=appstruct['email'],
                 fullname=appstruct['fullname'],
+                credit="00.00",
                 )
         user.__acl__ = [
                 (Allow, user.title, 'order'),
@@ -63,4 +64,8 @@ class Registration(FormView):
         self.request.session.flash(
                 u"Welcome to your collections, {0}!".format(user.title),
                 "success")
+        if user.credit == "00.00":
+                self.request.session.flash(
+                u'Please top up your credit as you have {0}'.format(user.credit),
+                "error")
         return HTTPFound(location=self.request.resource_url(user), headers=headers)
