@@ -1,37 +1,33 @@
 <html metal:use-macro="load: base.pt">
     <style metal:fill-slot="inline-style">
-        .client {
-            padding: 5px;
-            margin: 5px;
-            float: left;
-            overflow: hidden;
+        #showpic {
+            display: none;
+            position: absolute;
+            top: 25%;
+            left: 25%;
+            right: 25%;
+            padding: 50px;
+            border-radius: 15px;
+            background-color: white;
+            z-index:1002;
+            overflow: auto;
+        }
+        #cancel {
+            text-decoration: none;
+            font-size: 30px;
+        }
+        #cancel:hover {
+            cursor: pointer;
         }
     </style>
-    <div class="container" metal:fill-slot="main-content">
-        <div class="span8 offset2">
-            <div tal:condition="request.user is not None and request.user.title == 'admin'">
-                <div class="well">
-                    <div tal:repeat="item context.values()">
-                        <h1>${item.title}</h1>
-                        <h4>${item.description}</h4>
-                    </div>
-                </div>
-            </div>
-            <div class="span10 offset1">
-                <div class="well" tal:condition="request.user is None">
-                     <h1>Welcome to Nomadfoto!</h1>
-                     <h3>The best photo collection studio you can ever find.</h3>
-                     <!-- show menus on not signed in begin -->
-                        <a class="btn btn-primary" href="${request.application_url}/register">Register</a>
-                        <a class="btn btn-primary pull-right" href="${request.application_url}/login">Log In</a>
-                     <!-- show menus on not signed in end -->
-                 </div>
-             </div>
-        </div>
-    </div>
     <div metal:fill-slot="nav-signed">
         <!-- show menus on signed start -->
         <div tal:condition="request.user is not None and request.user.title == 'admin'">
+            <ul class="nav">
+                <li><a href="${request.application_url}/">Jobs Queue</a></li>
+                <li class="active"><a href="${request.resource_url(context, 'collections')}">Photo Collections</a></li>
+                <li><a href="${request.resource_url(context, 'clients')}">Client Details</a></li>
+            </ul>
             <ul class="nav pull-right">
                 <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-user"></i> ${request.user.title}<b class="caret"></b></a>
                     <ul class="dropdown-menu">
@@ -43,5 +39,64 @@
         </div>
         <!-- show menus on signed in end -->
     </div>
+    <div metal:fill-slot="main-content">
+        <div tal:condition="request.user is not None and request.user.title == 'admin'">
+            <div class="span10 offset1">
+                <div class="well">
+                    <ul class="thumbnails">
+                        <li tal:repeat="item images">
+                            <a id="lightbox">
+                                <img alt="${item.name}" src="${item.image}" />
+                            </a>
+                        </li>
+                    </ul>
+                    <div class="pagination">
+                        <ul>
+                            <li>${images.pager('$link_previous ~3~ $link_next')}</li>
+                        </ul>
+                    </div>
+                </div>
+                <form class="form">
+                    <div class="control-group">
+                        <input type="text" id="collection-name" placeholder="Collection Name">
+                        <input type="text" id="pic-tag" placeholder="Search by tag">
+                        <div class="controls">
+                            <button type="submit" class="btn">Search</button>
+                        </div>
+                    </div>
+                </form>
+                <div id="showpic">
+                    <div>
+                        <a id="cancel" class="pull-right">&times;</a>
+                    </div>
+                    <hr />
+                    <div id="pic">
+                    </div>
+                    <div id="info">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div metal:fill-slot="footer-scripts">
+        <script>
+            $(document).ready(function() {
+                $('#cancel').click(function() {
+                    $('#showpic').css('display', 'none');
+                    $('.overlay').css('display', 'none');
+                });
+                $('#lightbox').live('click', function(e) { 
+                    var source = $(this).html();
+                    $('#pic').html(source);
+                    $('#showpic').css('display', 'block');
+                    $('.overlay').css('display', 'block');
+                    $('.navbar').css('z-index', 1000); 
+                });
+                $('.overlay').live('click', function() {
+                        $('#showpic').css('display', 'none');
+                        $('.overlay').css('display', 'none');
+                    });
+            });
+        </script>
+    </div>
 </html>
-
