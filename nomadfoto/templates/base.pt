@@ -92,7 +92,7 @@
     <!-- main content begin -->
     <div class="container-fluid">
         <div class="row-fluid">
-            <div class="container">
+            <div class="span12">
                 <div tal:repeat="queue ('info', 'success', 'error', '')" tal:omit-tag="">
                     <div class="alert alert-${queue}"
                              tal:define="messages request.session.pop_flash(queue)"
