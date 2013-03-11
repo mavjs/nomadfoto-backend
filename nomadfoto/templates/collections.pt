@@ -41,39 +41,37 @@
     </div>
     <div metal:fill-slot="main-content">
         <div tal:condition="request.user is not None and request.user.title == 'admin'">
-            <div class="span10 offset1">
-                <div class="well">
-                    <ul class="thumbnails">
-                        <li tal:repeat="item images">
-                            <a id="lightbox">
-                                <img alt="${item.name}" src="${item.image}" />
-                            </a>
-                        </li>
+            <div class="well">
+                <ul class="thumbnails">
+                    <li tal:repeat="item images">
+                        <a id="lightbox">
+                            <img alt="${item.name}" src="${item.image}" />
+                        </a>
+                    </li>
+                </ul>
+                <div class="pagination">
+                    <ul>
+                        <li>${images.pager('$link_previous ~3~ $link_next')}</li>
                     </ul>
-                    <div class="pagination">
-                        <ul>
-                            <li>${images.pager('$link_previous ~3~ $link_next')}</li>
-                        </ul>
+                </div>
+            </div>
+            <form class="form">
+                <div class="control-group">
+                    <input type="text" id="collection-name" placeholder="Collection Name">
+                    <input type="text" id="pic-tag" placeholder="Search by tag">
+                    <div class="controls">
+                        <button type="submit" class="btn">Search</button>
                     </div>
                 </div>
-                <form class="form">
-                    <div class="control-group">
-                        <input type="text" id="collection-name" placeholder="Collection Name">
-                        <input type="text" id="pic-tag" placeholder="Search by tag">
-                        <div class="controls">
-                            <button type="submit" class="btn">Search</button>
-                        </div>
-                    </div>
-                </form>
-                <div id="showpic">
-                    <div>
-                        <a id="cancel" class="pull-right">&times;</a>
-                    </div>
-                    <hr />
-                    <div id="pic">
-                    </div>
-                    <div id="info">
-                    </div>
+            </form>
+            <div id="showpic">
+                <div>
+                    <a id="cancel" class="pull-right">&times;</a>
+                </div>
+                <hr />
+                <div id="pic">
+                </div>
+                <div id="info">
                 </div>
             </div>
         </div>

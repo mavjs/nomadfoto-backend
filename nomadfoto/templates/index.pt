@@ -47,6 +47,7 @@
                      <!-- show menus on not signed in end -->
                 </div>
             </div>
+            <div class="clearfix"></div>
             <!-- for no auth clients -->
             <div tal:condition="request.user is not None and request.user.title == 'admin'">
                 <h3>Welcome, ${request.user.title}, this is your job queues.</h3>
