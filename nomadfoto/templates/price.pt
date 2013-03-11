@@ -1,0 +1,150 @@
+<html metal:use-macro="load: base.pt">
+    <div metal:fill-slot="nav-signed">
+        <div tal:condition="request.user is not None and not request.user.title == 'admin'">
+            <ul class="nav">
+                <li><a href="${request.resource_url(context)}">Collections</a></li>
+                <li><a href="${request.resource_url(context, 'jobs')}">Jobs Queue</a></li>
+            </ul>
+        </div>
+        <ul class="nav pull-right">
+            <li><a><i class="icon-money"></i>${request.user.credit}</a></li>
+            <li tal:condition="request.user is not None and not request.user.title == 'admin' and request.user.credit == '00.00'">
+                <li class="divider-vertical"></li>
+                <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-shopping-cart"></i> Credit Order<b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                    <li><a id="price"><i class="icon-book"></i> Price List</a></li>
+                    <li><a id="order"><i class="icon-edit"></i> digiroll_edit</a></li> 
+                </ul>
+                </li>
+            </li>
+            <li class="divider-vertical"></li>
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-user"></i> ${request.user.title}<b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                    <li><a href="${request.application_url}/preferences"><i class="icon-wrench"></i>Preferences</a></li> 
+                    <li><a href="${request.application_url}/logout"><i class="icon-off"></i> Logout</a> </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+    <div metal:fill-slot="main-content">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Credit Package</th>
+                    <th>Exposures</th>
+                    <th>U$D</th>
+                    <th>€uro</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>CDL XXX</td>
+                    <td>480</td>
+                    <td>49.99</td>
+                    <td>39.99</td>
+                </tr>
+                <tr>
+                    <td>Milia</td>
+                    <td>1,000</td>
+                    <td>
+                    99.99
+                    </td>
+                    <td>
+                    79.99
+                    </td>
+                </tr>
+                <tr>
+                    <td>MMC</td>
+                    <td>
+                    2,000
+                    +
+                    100 FREE!
+                    </td>
+                    <td>
+                    199.95
+                    </td>
+                    <td>
+                    159.96
+                    </td>
+                </tr>
+                <tr>
+                    <td>(V)D</td>
+                    <td>
+                    5,000
+                    +
+                    500 FREE!
+                    </td>
+                    <td>
+                    499.95
+                    </td>
+                    <td>
+                    399.92
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <hr />
+        <h3>Example: with 1,000 credit you can:</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>JPG</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>you can upload app.</td>
+                    <td>318*</td>
+                    <td>JPG exposures</td>
+                </tr>
+                <tr>
+                    <td>and edit additional</td>
+                    <td>62*</td>
+                    <td>photos</td>
+                </tr>
+            </tbody>
+            <thead>
+                <tr>
+                    <th>If you shoot RAW</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>you can upload app.</td>
+                    <td>284*</td>
+                    <td>RAW exposures</td>
+                </tr>
+                <tr>
+                    <td>and edit additional</td>
+                    <td>56*</td>
+                    <td>Photo</td>
+                </tr>
+            </tbody>
+            <thead>
+                <tr>
+                    <th>
+                    Including storage for 1 year
+                    </th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        * Approximate estimation, based on selection rate of 20%,<br />
+                        average file size and initial storage allowance of 3 GB
+                    </td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</html>
