@@ -22,15 +22,13 @@
         </div>
         <ul class="nav pull-right">
             <li><a><i class="icon-money"></i>${request.user.credit}</a></li>
-            <li tal:condition="request.user is not None and not request.user.title == 'admin' and request.user.credit == '00.00'">
                 <li class="divider-vertical"></li>
                 <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-shopping-cart"></i> Credit Order<b class="caret"></b></a>
-                <ul class="dropdown-menu">
-                    <li><a href="${request.resource_url(context, 'pricelist')}"><i class="icon-book"></i> Price List</a></li>
-                </ul>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-shopping-cart"></i> Credit Order<b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="${request.resource_url(context, 'pricelist')}"><i class="icon-book"></i> Price List</a></li>
+                    </ul>
                 </li>
-            </li>
             <li class="divider-vertical"></li>
             <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-user"></i> ${request.user.title}<b class="caret"></b></a>
