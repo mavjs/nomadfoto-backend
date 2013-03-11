@@ -1,3 +1,8 @@
+0.4
+---
+
+- more features added. Now to have the job order logic hooked up to drag and drop.
+
 0.3
 ---
 
