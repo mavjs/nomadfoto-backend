@@ -12,7 +12,6 @@
             z-index:1002;
             overflow: auto;
         }
-
     </style>
     <div metal:fill-slot="nav-signed">
         <div tal:condition="request.user is not None and not request.user.title == 'admin'">
@@ -22,30 +21,31 @@
             </ul>
         </div>
         <ul class="nav pull-right">
-            <li><a><i class="icon-money"></i> 100.00</a></li>
-            <li class="divider-vertical"></li>
-            <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-shopping-cart"></i> Orders<b class="caret"></b></a>
+            <li><a><i class="icon-money"></i>${request.user.credit}</a></li>
+            <li tal:condition="request.user is not None and not request.user.title == 'admin' and request.user.credit == '00.00'">
+                <li class="divider-vertical"></li>
+                <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-shopping-cart"></i> Credit Order<b class="caret"></b></a>
                 <ul class="dropdown-menu">
-                    <li><a id="order"><i class="icon-edit"></i> digiroll_edit</a></li> 
-                    <li><a><i class="icon-book"></i> digiroll_all</a></li>
+                    <li><a href="${request.resource_url(context, 'pricelist')}"><i class="icon-book"></i> Price List</a></li>
                 </ul>
+                </li>
             </li>
             <li class="divider-vertical"></li>
             <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-user"></i> ${request.user.title}<b class="caret"></b></a>
                 <ul class="dropdown-menu">
+                    <li><a id="order"><i class="icon-edit"></i> digiroll_edit Details</a></li> 
                     <li><a href="${request.application_url}/preferences"><i class="icon-wrench"></i>Preferences</a></li> 
                     <li><a href="${request.application_url}/logout"><i class="icon-off"></i> Logout</a> </li>
                 </ul>
             </li>
         </ul>
     </div>
-    <div class="container" metal:fill-slot="main-content">
-        <div tal:condition="request.user is not None and not request.user.title == 'admin'">
-            <div class="span12">
+    <div metal:fill-slot="main-content">
+            <div tal:condition="request.user is not None and not request.user.title == 'admin'">
                 <div class="orderform">
-                    <form class="form-horizontal"  action="${request.resource_url(context, 'order')}" method="POST" accept-charset="utf-8" enctype="multipart/form-data">
+                    <form class="form-horizontal"  action="${request.resource_url(context, 'edit')}" method="POST" accept-charset="utf-8" enctype="multipart/form-data">
                         <fieldset>
                             <div class="control-group">
                                 <label class="control-label" for="username"><b>Username</b></label>
@@ -54,10 +54,10 @@
                                 </div>
                             </div>
                             <div class="control-group">
-                                <label class="control-label" for=""><b>How to select the pictures to edit</b></label>
+                                <label class="control-label" for="digiroll_edit"><b>How to select the pictures to edit</b></label>
                                 <div class="controls">
-                                    <select id="digiroll_edit">
-                                        <option>Select</option>
+                                    <select id="digiroll_edit" name="digiroll">
+                                        <option selected>Select</option>
                                         <option value="all_defective">ALL, except the defective ones</option>
                                         <option value="40">40-60%</option>
                                         <option value="20">20-30%</option>
@@ -96,12 +96,17 @@
                     </fieldset>
                     <div id="dragzone" class="well">
                         <ul class="thumbnails">
-                            <li class="ui-draggable" tal:repeat="item request.root['images'].values()">
-                                <a class="thumbnail" href="${item.image}" tal:condition="item.uid == request.user.title">
-                                    <img src="${item.image}" />
+                            <li class="ui-draggable" tal:repeat="item images">
+                                <a class="thumbnail" tal:condition="item.uid == request.user.title">
+                                    <img alt="${item.name}" src="${item.image}" />
                                 </a>
                             </li>
                         </ul>
+                        <div class="pagination">
+                            <ul>
+                                <li>${images.pager('$link_previous ~3~ $link_next')}</li>
+                            </ul>
+                        </div>
                     </div>
                     <div class="clearfix"></div>
                     <fieldset>
@@ -111,8 +116,7 @@
                     </fieldset>
                     <form class="form">
                         <div class="control-group">
-                            <input type="text" id="start-date" placeholder="Job Start Date">
-                            <input type="text" id="end-date" placeholder="Job End Date">
+                            <input type="text" id="collection-name" placeholder="Collection Name">
                             <input type="text" id="pic-tag" placeholder="Search by tag">
                             <div class="controls">
                                 <button type="submit" class="btn">Search</button>
@@ -163,12 +167,9 @@
                     </div>
                 </div>
             </div>
-        </div>
     </div>
     <div metal:fill-slot="footer-scripts">
         <script src="${request.static_url('nomadfoto:static/js/collection.js')}"></script>
-    </div>
-    <div metal:fill-slot="footer-scripts">
         <script>
             $(document).ready(function() {
                 $('#order').click(function() {
@@ -178,6 +179,7 @@
                     $('#footer').css('z-index', 900);
                 });
                 $('#cancel').click(function() {
+                    $('.pricelist').css('display', 'none');
                     $('.orderform').css('display', 'none');
                     $('.overlay').css('display', 'none');
                 });
