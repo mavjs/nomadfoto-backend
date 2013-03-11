@@ -16,18 +16,22 @@ import Image
 def upload_view(request):
     user = request.POST['username']
     jobid = request.POST['jobid']
+    collection = request.POST['collection']
     uploadfile = request.POST['upload']
-    return_url = request['HTTP_ORIGIN']
-    import pdb; pdb.set_trace()
-    if not uploadfile:
-        request.session.flash(u"Please select a file to upload", "error")
+    return_url = request['HTTP_REFERER']
+    if uploadfile == '':
+        request.session.flash(u"Please select a file to upload!", "error")
         return HTTPFound(location=return_url)
-    filetype = uploadfile.type
-    filezip = StringIO(uploadfile.file.read())
-    if not filetype == 'application/zip':
-        request.session.flash(u"Please upload a zip file.", "error")
+    elif collection == '':
+        request.session.flash(u"Please type in a name for your collection!", "error")
         return HTTPFound(location=return_url)
-    elif filetype == 'application/zip':
+    else:
+        filetype = uploadfile.type
+        filezip = StringIO(uploadfile.file.read())
+        if not filetype == 'application/zip':
+            request.session.flash(u"Please upload a zip file.", "error")
+            return HTTPFound(location=return_url)
+        elif filetype == 'application/zip':
             zip_list = zipfile.ZipFile(filezip, 'r')
             for item in zip_list.namelist():
                 if not os.path.basename(item):
@@ -45,10 +49,13 @@ def upload_view(request):
                         jobid=jobid,
                         image_name=split_name,
                         image_file=finished_image,
+                        tag="tag",
+                        collection=collection,
                         )
                 source.__acl__ = [
                         (Allow, user, 'view'),
                         (Allow, user, 'share'),
+                        (Allow, request.user.title, 'view'),
                         ]
                 request.root['images'][file_uid] = source
                 request.root['jobs'][jobid].status = 'completed'
