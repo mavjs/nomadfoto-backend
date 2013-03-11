@@ -2,6 +2,11 @@ from persistent.mapping import PersistentMapping
 from pyramid.security import Allow, Deny, ALL_PERMISSIONS
 import hashlib
 
+# repoze.catalog for catalogging photos
+from repoze.catalog.indexes.text import CatalogTextIndex
+from repoze.catalog.catalog import Catalog
+from repoze.catalog.document import DocumentMap
+
 #Main root storage folder class
 class StorageFolder(PersistentMapping):
     __parent__ = __name__ = None
@@ -23,30 +28,33 @@ class GenericFolder(StorageFolder):
 
 #Image folder for each image storing XXX: use ZODB.Blob()
 class ImageStore(StorageFolder):
-    def __init__(self, uid, jobid, image_name, image_file):
+    def __init__(self, uid, jobid, image_name, image_file, tag=u"",collection=u""):
         super(ImageStore, self).__init__(self)
         self.uid = uid
         self.jobid = jobid
         self.name = image_name
         self.image = image_file
+        self.tag = tag
+        self.collection = collection
 
 #Job queue folder for each job storing
 class JobStore(StorageFolder):
     def __init__(self, clientid, dropboxid, jobid, jobtype, status):
         super(JobStore, self).__init__(self)
         self.uid = clientid
-        self.dropboxuid = dropboxid
+        self.dropboxid = dropboxid
         self.jobid = jobid
         self.jobtype = jobtype
         self.status = status
 
 #User folder for storing credentials of users
 class User(StorageFolder):
-    def __init__(self, username, email, password, dropboxid=u"", fullname=u""):
+    def __init__(self, username, email, password, dropboxid=u"", fullname=u"", credit="00.00"):
         super(User, self).__init__(title=username, description=fullname)
         self.email = email
         self.dropboxid = dropboxid
         self.hashed_password = self.hash(password)
+        self.credit = credit
 
     @staticmethod
     def hash(password):
@@ -74,9 +82,11 @@ def appmaker(zodb_root):
         #test user account XXX: to remove on prod
         app_root['test'] = User(
                 username=u"test",
-                email=u"test",
+                email=u"test@example.com",
                 password=u"test",
-                fullname=u"test",
+                dropboxid=u"testuser",
+                fullname=u"test user",
+                credit="00.00",
                 )
 
         #give permissions XXX: to check acl on prod/demo
@@ -100,7 +110,7 @@ def appmaker(zodb_root):
                 title=u"Jobs Queues",
                 description=u"Folder to store job status queues from clients",
                 )
-        #test user job
+        #test user job for digiroll_all
         app_root['jobs']['test-0'] = JobStore(
                 clientid='test',
                 dropboxid='test',
@@ -108,8 +118,27 @@ def appmaker(zodb_root):
                 jobtype='digiroll_all',
                 status='pending',
                 )
-
+        
+        #test user job for digiroll_edit
+        app_root['jobs']['test-1'] = JobStore(
+                clientid='test',
+                dropboxid='test',
+                jobid='test-1',
+                jobtype='digiroll_edit',
+                status='pending',
+                )
+        
+        #site root folder
         zodb_root['app_root'] = app_root
+
+        #catalog stuff
+        catalog = Catalog()
+        catalog['tag'] = CatalogTextIndex('tag')
+        catalog['collection'] = CatalogTextIndex('collection')
+        app_root.catalog = catalog
+        document_map = DocumentMap()
+        app_root.document_map = document_map
+
         import transaction
         transaction.commit()
     return zodb_root['app_root']
