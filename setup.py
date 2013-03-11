@@ -18,6 +18,8 @@ requires = [
     'deform_bootstrap',
     'pyramid_deform',
     'PIL',
+    'repoze.catalog',
+    'webhelpers',
     ]
 
 setup(name='nomadfoto',
