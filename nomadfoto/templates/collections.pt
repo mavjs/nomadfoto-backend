@@ -44,7 +44,7 @@
             <div class="well">
                 <ul class="thumbnails">
                     <li tal:repeat="item images">
-                        <a id="lightbox">
+                        <a class="thumbnail" id="lightbox">
                             <img alt="${item.name}" src="${item.image}" />
                         </a>
                     </li>
