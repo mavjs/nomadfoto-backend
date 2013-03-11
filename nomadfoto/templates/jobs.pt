@@ -24,7 +24,7 @@
             <li><a><i class="icon-money"></i>${request.user.credit}</a></li>
             <li class="divider-vertical"></li>
             <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-shopping-cart"></i> Orders<b class="caret"></b></a>
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-shopping-cart"></i>Credit Order<b class="caret"></b></a>
                 <ul class="dropdown-menu">
                     <li><a href="${request.resource_url(context, 'pricelist')}"><i class="icon-book"></i> Price List</a></li>
                 </ul>
@@ -33,7 +33,7 @@
             <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-user"></i> ${request.user.title}<b class="caret"></b></a>
                 <ul class="dropdown-menu">
-                    <li><a id="order"><i class="icon-edit"></i> digiroll_edit Details</a></li> 
+                    <li><a id="order"><i class="icon-edit"></i> DigiRoll Details</a></li> 
                     <li><a href="${request.application_url}/preferences"><i class="icon-wrench"></i>Preferences</a></li> 
                     <li><a href="${request.application_url}/logout"><i class="icon-off"></i> Logout</a> </li>
                 </ul>
